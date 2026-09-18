@@ -1,0 +1,5 @@
+export type ToolRisk = 'SAFE' | 'REVIEW' | 'DANGEROUS';
+export type AgentToolName = 'read_file' | 'write_file' | 'edit_file' | 'create_file' | 'delete_file' | 'list_files' | 'search_files' | 'run_command' | 'get_terminal_output' | 'start_process' | 'stop_process' | 'git_status' | 'git_diff' | 'git_commit' | 'github_create_branch' | 'github_create_pull_request' | 'search_npm' | 'search_pypi' | 'run_sandbox' | 'get_sandbox_output';
+export interface AgentToolRequest { name: AgentToolName; input: Record<string, unknown>; reason?: string; }
+export interface AgentToolResult { name: AgentToolName; ok: boolean; output?: unknown; error?: string; risk: ToolRisk; approvalRequired: boolean; }
+export interface AgentTaskPlan { goal: string; requirements: string[]; architecture: string[]; stack: string[]; files: string[]; dependencies: string[]; tasks: Array<{ id: string; description: string; status: 'pending' | 'running' | 'completed' | 'failed' | 'cancelled'; startedAt?: string; completedAt?: string; files: string[]; commands: string[]; errors: string[]; iterations: number }>; tests: string[]; }
