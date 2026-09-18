@@ -7,6 +7,6 @@ export function loadLocalEnvironment(root: string): void {
   if (!file) return;
   for (const line of fs.readFileSync(file, 'utf8').split(/\r?\n/u)) {
     const match = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/u);
-    if (match?.[1] && process.env[match[1]] === undefined) process.env[match[1]] = match[2].replace(/^['"]|['"]$/gu, '');
+    if (match?.[1] && process.env[match[1]] === undefined) process.env[match[1]] = match[2].trim().replace(/^['"]|['"]$/gu, '');
   }
 }

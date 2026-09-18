@@ -3,7 +3,14 @@ import { contextBridge, ipcRenderer } from 'electron';
 const invoke = (channel: string, ...args: unknown[]): Promise<unknown> => ipcRenderer.invoke(channel, ...args);
 contextBridge.exposeInMainWorld('ngola', {
 	getConfigStatus: () => invoke('app:get-config-status'),
+	createWorkspace: (request: string) => invoke('workspace:create', request),
+	openFolder: () => invoke('workspace:open-folder'),
+	openFile: () => invoke('workspace:open-file'),
+	saveAs: (filePath: string, content: string) => invoke('workspace:save-as', filePath, content),
+	openExternal: (url: string) => invoke('external:open', url),
 	getProviderStatus: () => invoke('app:get-provider-status'),
+	checkProvider: (provider: string) => invoke('app:check-provider', provider),
+	checkProviders: () => invoke('app:check-providers'),
 	getQuota: () => invoke('quota:get'),
 	getUsageToday: () => invoke('usage:get-today'),
 	clearUsage: () => invoke('usage:clear'),
@@ -33,4 +40,5 @@ contextBridge.exposeInMainWorld('ngola', {
 	, onAgentEvent: (listener: (event: unknown) => void) => { const callback = (_event: Electron.IpcRendererEvent, data: unknown) => listener(data); ipcRenderer.on('agent:event', callback); return () => ipcRenderer.removeListener('agent:event', callback); }
 	, detectPreview: () => invoke('preview:detect')
 	, openPreview: (url: string) => invoke('preview:open', url)
+	, onMenuCommand: (listener: (command: string) => void) => { const callback = (_event: Electron.IpcRendererEvent, command: string) => listener(command); ipcRenderer.on('menu:command', callback); return () => ipcRenderer.removeListener('menu:command', callback); }
 });
